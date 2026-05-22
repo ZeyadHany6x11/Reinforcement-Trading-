@@ -13,16 +13,6 @@ The project includes:
 
 ---
 
-## Team Members
-
-| Name | ID |
-|---|---|
-| Ziad Hany Saeed Othman | 20230120 |
-| Ahmed Yasser Hassanein El-Azouk | 20230070 |
-| Omar Mohamed Qamar Eldawla Gomaa Gadallah | 20230218 |
-
----
-
 ## Project Idea
 
 The goal of this project is to show how reinforcement learning can be used in a simple trading system.
