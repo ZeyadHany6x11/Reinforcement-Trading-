@@ -77,9 +77,8 @@ rl-trading/
 │   ├── vite.config.js
 │   └── tsconfig.json
 │
-├── README.txt
 ├── README.md
-└── file.md
+
 ```
 
 ---
