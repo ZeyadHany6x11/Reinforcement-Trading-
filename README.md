@@ -1,192 +1,251 @@
-# RL Trading System
+# ⚡ RL Trading System
 
-A full-stack reinforcement learning trading project that trains an agent to make simple market decisions: hold, buy, or sell.
+<p align="center">
+  <strong>Teaching Machines to Make Trading Decisions.</strong>
+  <br>
+  A full-stack Reinforcement Learning platform for training, simulating, and visualizing intelligent trading agents.
+</p>
 
-The project includes:
-
-- A Python FastAPI backend
-- A React + Vite frontend
-- A custom trading environment
-- Q-Learning and Deep Q-Network agents
-- Market data loading from Yahoo Finance and CoinGecko
-- A dashboard for training, simulation, charts, and portfolio statistics
-
----
-
-## Project Idea
-
-The goal of this project is to show how reinforcement learning can be used in a simple trading system.
-
-The agent receives a state that represents recent price movement and whether it currently owns shares. Then it chooses one of three actions:
-
-| Action | Meaning |
-|---:|---|
-| 0 | Hold |
-| 1 | Buy |
-| 2 | Sell |
-
-The environment gives the agent a reward based on portfolio performance, realized profit or loss, and invalid actions.
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI">
+  <img src="https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white" alt="PyTorch">
+  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React">
+  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript">
+  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker">
+</p>
 
 ---
 
-## Technologies Used
+## 🧠 Overview
 
-### Backend
+**RL Trading System** is a full-stack Reinforcement Learning project that explores how an intelligent agent can learn simplified trading decisions from historical market data.
 
-- Python
-- FastAPI
-- Uvicorn
-- NumPy
-- PyTorch
-- yfinance
-- pandas
-- Pydantic
+The agent interacts with a custom trading environment, observes market-related states, and chooses between three actions: **Hold, Buy, or Sell**. Through repeated training episodes, it learns action values based on the rewards defined by the environment.
 
-### Frontend
+The platform combines a Python backend with an interactive React dashboard, making it possible to train agents, monitor progress, simulate trading behavior, and visualize portfolio performance.
 
-- React
-- TypeScript
-- Vite
-- Tailwind CSS
-- Recharts
+## ✨ Key Features
 
----
+- 🧠 **Reinforcement Learning** — Experiment with tabular Q-Learning and Deep Q-Networks (DQN).
+- 📈 **Market Data Integration** — Load historical stock and cryptocurrency prices.
+- 🎮 **Custom Trading Environment** — Simulate trading actions, balances, holdings, rewards, and portfolio values.
+- ⚡ **Training Progress** — Track episodes, rewards, and training status through the API.
+- 📊 **Interactive Dashboard** — Visualize price movements, portfolio values, and trade signals.
+- 💹 **Portfolio Analytics** — Review final portfolio value, profit or loss, returns, and trade counts.
+- 🔌 **FastAPI Backend** — Expose training, simulation, status, and health endpoints.
+- ⚛️ **React Frontend** — Explore the system through a dedicated user interface.
+- 🔄 **Market Data Fallback** — Use demo data if live data retrieval fails.
+- 🧪 **Algorithm Comparison** — Compare a table-based learning approach with a neural-network-based approach.
 
-## Project Structure
+## 🏗️ System Architecture
+
+```mermaid
+flowchart TD
+    A["📊 Yahoo Finance / CoinGecko"] --> B["Market Data Loader"]
+    B --> C["Custom Trading Environment"]
+    C --> D{"RL Agent"}
+    D --> E["Q-Learning"]
+    D --> F["Deep Q-Network"]
+    E --> G["Training & Simulation"]
+    F --> G
+    G --> H["FastAPI Backend"]
+    H --> I["React + Vite Dashboard"]
+    I --> J["Charts & Trading Signals"]
+    I --> K["Portfolio Statistics"]
+    I --> L["Training Progress"]
+```
+
+### How It Works
+
+1. **Load market data** from supported data sources or use fallback demo data.
+2. **Construct the environment** using price history, account balance, and current holdings.
+3. **Observe the state** representing recent price movement and portfolio conditions.
+4. **Select an action** using Q-Learning or DQN.
+5. **Calculate the reward** according to the environment's reward function.
+6. **Train the agent** over multiple episodes.
+7. **Run a simulation** and visualize the resulting trades and portfolio statistics.
+
+## 🎮 Trading Environment
+
+The custom `TradingEnv` environment defines the agent's interaction with the simulated market.
+
+### Available Actions
+
+| Action | Decision | Description |
+|---:|---|---|
+| `0` | Hold | Maintain the current position |
+| `1` | Buy | Attempt to purchase shares |
+| `2` | Sell | Attempt to sell shares |
+
+### Environment Responsibilities
+
+- Represent recent price movements in the state.
+- Track available balance and shares held.
+- Process buy and sell actions.
+- Calculate rewards and realized profit or loss.
+- Calculate portfolio value.
+- Determine when an episode ends.
+
+The reward function is a central part of the environment: it influences which actions the agent learns to prefer. Invalid actions can also affect rewards according to the environment's implementation.
+
+## 🤖 Reinforcement Learning Algorithms
+
+### 1. Q-Learning
+
+Q-Learning is a model-free reinforcement learning algorithm that learns the expected value of taking an action in a particular state.
+
+This implementation uses a Q-table. Since market states contain continuous numerical information, the agent discretizes relevant state values into bins.
+
+**Advantages**
+- Relatively simple to implement.
+- Useful for understanding reinforcement learning fundamentals.
+- Can be fast for small, discretized state spaces.
+
+**Limitations**
+- Requires state discretization.
+- The table can grow substantially as the state space expands.
+- Generalization to unseen states is limited.
+
+### 2. Deep Q-Network (DQN)
+
+DQN uses a neural network to approximate action values instead of storing every state-action value in a table.
+
+The implementation includes:
+
+- `DQNNetwork` — Neural network used to estimate Q-values.
+- `DQNAgent` — Agent responsible for selecting actions and learning.
+- **Replay memory** — Reuses past transitions during training.
+- **Target network** — Helps stabilize the learning process.
+
+**Advantages**
+- Can generalize across similar numerical states.
+- Avoids maintaining a large explicit Q-table.
+- Supports more expressive state representations.
+
+**Limitations**
+- Requires more computation and careful tuning.
+- Training can be sensitive to hyperparameters and reward design.
+- Better function approximation does not guarantee better trading performance.
+
+## 📂 Project Structure
 
 ```text
 rl-trading/
 ├── backend/
-│   ├── main.py
-│   ├── env.py
-│   ├── q_learning.py
-│   ├── dqn.py
-│   ├── data_loader.py
-│   └── requirements.txt
+│   ├── main.py              # FastAPI server and endpoints
+│   ├── env.py               # Custom trading environment
+│   ├── q_learning.py        # Tabular Q-Learning agent
+│   ├── dqn.py               # DQN network and agent
+│   ├── data_loader.py       # Market data loading
+│   └── requirements.txt     # Backend dependencies
 │
 ├── frontend/
 │   ├── src/
-│   │   ├── App.tsx
-│   │   ├── index.css
+│   │   ├── App.tsx          # Application entry and navigation
+│   │   ├── index.css        # Global styles
 │   │   └── pages/
-│   │       ├── Hero.tsx
-│   │       ├── Dashboard.tsx
-│   │       ├── Chart.tsx
-│   │       └── Stats.tsx
+│   │       ├── Hero.tsx     # Landing page
+│   │       ├── Dashboard.tsx# Training and simulation controls
+│   │       ├── Chart.tsx    # Price and portfolio visualization
+│   │       └── Stats.tsx    # Performance statistics
 │   ├── package.json
 │   ├── vite.config.js
 │   └── tsconfig.json
 │
-├── README.md
-
+└── README.md
 ```
 
----
+## 🛠️ Tech Stack
 
-## Backend Explanation
+| Technology | Purpose |
+|---|---|
+| **Python** | Backend and agent implementation |
+| **FastAPI** | API endpoints and request handling |
+| **Uvicorn** | ASGI server |
+| **NumPy** | Numerical operations |
+| **PyTorch** | Neural network implementation for DQN |
+| **yfinance** | Historical market data |
+| **Pandas** | Market data manipulation |
+| **Pydantic** | Request and response validation |
+| **React** | Frontend user interface |
+| **TypeScript** | Frontend type safety |
+| **Vite** | Frontend development server |
+| **Tailwind CSS** | UI styling |
+| **Recharts** | Charts and data visualization |
+| **CoinGecko** | Cryptocurrency price data source |
 
-### `main.py`
+## 🚀 Getting Started
 
-This file runs the FastAPI server.
+### Prerequisites
 
-It provides API endpoints for:
+Make sure you have installed:
 
-- starting training
-- checking training status
-- running simulation
-- checking backend health
+- Python
+- Node.js and npm
+- Git
 
-It also stores trained agents in memory.
+### 1. Clone the Repository
 
-### `env.py`
-
-This file contains `TradingEnv`.
-
-The environment handles:
-
-- price window state
-- current balance
-- shares held
-- buy and sell actions
-- reward calculation
-- portfolio value
-- episode ending
-
-### `q_learning.py`
-
-This file contains `QLearningAgent`.
-
-It uses a Q-table to learn action values. Since price states are continuous numbers, the agent first converts them into bins.
-
-### `dqn.py`
-
-This file contains:
-
-- `DQNNetwork`
-- `DQNAgent`
-
-The DQN agent uses a neural network instead of a Q-table. It also uses replay memory and a target network to make learning more stable.
-
-### `data_loader.py`
-
-This file loads price data.
-
-It supports:
-
-- stocks from Yahoo Finance
-- crypto prices from CoinGecko
-- fallback demo data if live data fails
-
-Supported tickers:
-
-```text
-AAPL, MSFT, GOOGL, BTC-USD, ETH-USD, TSLA, SPY
+```bash
+git clone <your-repository-url>
+cd rl-trading
 ```
 
----
+Replace the placeholder with your repository URL and enter the actual project directory.
 
-## Frontend Explanation
+### 2. Start the Backend
 
-### `App.tsx`
+Open a terminal:
 
-Controls whether the user sees the landing page or the dashboard.
+```bash
+cd backend
+python -m venv venv
+```
 
-### `Hero.tsx`
+Activate the environment on Windows:
 
-Displays the landing screen with the project title and an animated background.
+```powershell
+venv\Scripts\activate
+```
 
-### `Dashboard.tsx`
+On macOS or Linux:
 
-The main user interface.
+```bash
+source venv/bin/activate
+```
 
-It lets the user:
+Install dependencies:
 
-- select a ticker
-- select an algorithm
-- choose number of episodes
-- choose the training period
-- train the agent
-- run simulation
-- view progress and errors
+```bash
+pip install -r requirements.txt
+```
 
-### `Chart.tsx`
+Start FastAPI:
 
-Displays the price and portfolio chart using Recharts.
+```bash
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+```
 
-It also shows buy and sell signals.
+Backend URL:
 
-### `Stats.tsx`
+**http://localhost:8000**
 
-Displays the final simulation statistics:
+### 3. Start the Frontend
 
-- final portfolio value
-- total profit or loss
-- return percentage
-- total trades
+Open a second terminal from the project root:
 
----
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-## API Endpoints
+Open the local URL printed by Vite in the terminal. The configured port may differ from the default.
+
+> Ensure the frontend's API base URL matches the backend address and that CORS is configured appropriately for local development.
+
+## 🔌 API Reference
 
 Base URL:
 
@@ -194,13 +253,11 @@ Base URL:
 http://localhost:8000/rl-api
 ```
 
-### Train Agent
+### Train an Agent
 
-```http
-POST /train
-```
+`POST /train`
 
-Request body:
+Example request:
 
 ```json
 {
@@ -211,30 +268,26 @@ Request body:
 }
 ```
 
-Returns a task ID used to check training progress.
+The endpoint returns a task ID that can be used to monitor training progress.
 
 ### Check Training Status
 
-```http
-GET /train/status/{task_id}
-```
+`GET /train/status/{task_id}`
 
-Returns:
+The response provides information such as:
 
-- status
-- progress
-- current episode
-- total episodes
-- last reward
-- number of data points
+- Training status
+- Progress
+- Current episode
+- Total episodes
+- Last reward
+- Number of data points
 
-### Run Simulation
+### Run a Simulation
 
-```http
-POST /simulate
-```
+`POST /simulate`
 
-Request body:
+Example request:
 
 ```json
 {
@@ -243,21 +296,18 @@ Request body:
 }
 ```
 
-Returns:
+The simulation response includes:
 
-- prices
-- portfolio values
-- buy signals
-- sell signals
-- final statistics
+- Price history
+- Portfolio values
+- Buy and sell signals
+- Final portfolio statistics
 
 ### Health Check
 
-```http
-GET /healthz
-```
+`GET /healthz`
 
-Returns:
+Example response:
 
 ```json
 {
@@ -265,115 +315,83 @@ Returns:
 }
 ```
 
----
+For exact request schemas and response details, refer to the backend implementation.
 
-## How to Run the Project
+## 📈 Dashboard Workflow
 
-### 1. Start the Backend
+1. Open the frontend.
+2. Select **ENTER DASHBOARD**.
+3. Choose a supported ticker.
+4. Select `Q-Learning` or `DQN`.
+5. Configure the number of training episodes and historical data period.
+6. Start training.
+7. Monitor training progress and any reported errors.
+8. Run a simulation.
+9. Review the price chart, trade signals, portfolio value, and statistics.
 
-Open a terminal:
+## 📊 Performance Metrics
 
-```bash
-cd backend
-pip install -r requirements.txt
-uvicorn main:app --host 0.0.0.0 --port 8000 --reload
-```
+The dashboard reports:
 
-The backend should run on:
+| Metric | Meaning |
+|---|---|
+| Final Portfolio Value | Portfolio value at the end of the simulation |
+| Total Profit / Loss | Difference between final and initial portfolio value, subject to the implementation's accounting rules |
+| Return Percentage | Portfolio change expressed as a percentage |
+| Total Trades | Number of trades reported by the simulation |
 
-```text
-http://localhost:8000
-```
+These statistics describe the simulation. They do not, by themselves, establish that an agent will perform well on unseen market data.
 
-### 2. Start the Frontend
+## 💡 Key Concepts Explored
 
-Open another terminal:
+- Reinforcement Learning fundamentals
+- State, action, and reward design
+- Q-values and Q-tables
+- State discretization
+- Neural-network function approximation
+- Experience replay and target networks
+- Training episodes and agent evaluation
+- Market data processing
+- Portfolio value and trading signals
+- Frontend/backend integration
+- Interactive financial data visualization
 
-```bash
-cd frontend
-npm install
-npm run dev
-```
+## ⚠️ Limitations & Disclaimer
 
-The frontend should run on:
+This is an **educational reinforcement learning project**, not a production-ready trading system or financial adviser.
 
-```text
-http://localhost:3000
-```
+The current simulation is simplified and does not include real trading fees, slippage, comprehensive risk management, or live order execution.
 
----
+Additional considerations:
 
-## How to Use
+- Historical performance does not guarantee future results.
+- Agents may overfit to the data used during training.
+- Reward design can produce undesirable trading behavior.
+- Results depend on data quality, environment assumptions, and training settings.
+- Realistic evaluation requires out-of-sample testing and careful risk analysis.
 
-1. Open the frontend in the browser.
-2. Click `ENTER DASHBOARD`.
-3. Choose a ticker.
-4. Choose an algorithm: `Q-Learning` or `DQN`.
-5. Choose the number of episodes.
-6. Choose the period.
-7. Click `TRAIN`.
-8. Wait until training is complete.
-9. Click `RUN SIMULATION`.
-10. View the chart, portfolio value, buy/sell signals, and statistics.
+Do not use the simulation's results as the sole basis for financial decisions.
 
----
+## 🔮 Future Improvements
 
-## Algorithms
+Potential extensions include:
 
-### Q-Learning
+- Persisting trained models to disk.
+- Adding transaction costs and slippage.
+- Comparing results against buy-and-hold benchmarks.
+- Calculating Sharpe ratio and maximum drawdown.
+- Incorporating technical indicators.
+- Expanding ticker and market support.
+- Tracking historical training and simulation results.
+- Adding authentication and user-specific sessions.
+- Deploying the frontend and backend online.
 
-Q-Learning is simple and table-based.
-
-It stores values for each state-action pair in a Q-table.
-
-Advantages:
-
-- simple
-- fast
-- easy to understand
-
-Limitations:
-
-- needs discretization
-- does not handle large continuous state spaces very well
-
-### Deep Q-Network
-
-DQN uses a neural network to predict Q-values.
-
-Advantages:
-
-- handles continuous states better
-- can generalize between similar states
-- more powerful than a simple table
-
-Limitations:
-
-- slower to train
-- needs PyTorch
-- more complex
+These are possible future enhancements, not claims about currently implemented features.
 
 ---
 
-## Notes
-
-- Q-Learning is usually faster for quick tests.
-- DQN may take more time, especially with longer periods or many episodes.
-- The project is educational and simplified.
-- It does not include real trading fees, slippage, risk control, or live trading execution.
-
----
-
-## Future Improvements
-
-Possible improvements:
-
-- save trained models to disk
-- add transaction fees
-- add benchmark comparison
-- add Sharpe ratio and drawdown
-- add technical indicators
-- add more tickers
-- add model performance history
-- add user authentication
-- deploy backend and frontend online
+<p align="center">
+  <strong>Observe the market. Learn from rewards. Evaluate every decision.</strong>
+  <br><br>
+  Built with Python, Reinforcement Learning, FastAPI, and React.
+</p>
